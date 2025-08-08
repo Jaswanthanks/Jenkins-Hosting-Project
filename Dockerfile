@@ -15,7 +15,7 @@ RUN rm -rf ./*
 COPY . . 
 
 # Expose port 3000 for serving the application
-EXPOSE 80
+EXPOSE 3000
 
 # Start the Nginx server
 CMD ["nginx" , "-g" , "daemon off;"]
