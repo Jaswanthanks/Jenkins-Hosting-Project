@@ -1,33 +1,21 @@
-# Use an official Node.js runtime as the base image
-FROM node:14-alpine AS build
-
-# Set the working directory inside the container
-WORKDIR /app
-
-# Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
-
-# Install the project dependencies
-RUN npm install
-
-# Copy the rest of the application code to the working directory
-COPY . .
-
-# Build the React app for production
-RUN npm run build
-
-# Serve the React app using a lightweight HTTP server
+# Use Nginx as the base image to serve static files
 FROM nginx:alpine
 
 # Ensure permissions for /var/cache/nginx (required for Nginx on some systems)
 RUN mkdir -p /var/cache/nginx/client_temp && \
     chmod -R 777 /var/cache/nginx
 
-# Copy the build output from the previous stage to the nginx HTML directory
-COPY --from=build /app/build /usr/share/nginx/html
+# Set the working directory to Nginx’s default static files directory
+WORKDIR /usr/share/nginx/html
 
-# Expose port 3000
+# Remove default Nginx static files
+RUN rm -rf ./*
+
+# Copy all frontend files
+COPY . . 
+
+# Expose port 3000 for serving the application
 EXPOSE 3000
 
-# Start nginx server in the foreground
-CMD ["nginx", "-g", "daemon off;"]
+# Start the Nginx server
+CMD ["nginx" , "-g" , "daemon off;"]
