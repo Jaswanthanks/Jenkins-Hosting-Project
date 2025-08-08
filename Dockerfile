@@ -26,8 +26,8 @@ RUN mkdir -p /var/cache/nginx/client_temp && \
 # Copy the build output from the previous stage to the nginx HTML directory
 COPY --from=build /app/build /usr/share/nginx/html
 
-# Expose port 80
-EXPOSE 80
+# Expose port 3000
+EXPOSE 3000
 
 # Start nginx server in the foreground
 CMD ["nginx", "-g", "daemon off;"]
